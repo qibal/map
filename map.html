@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Jawa Barat</title>
+    
+    <!-- Tailwind CSS - CDN yang benar -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* Pastikan peta tidak menutupi header */
+        #map { 
+            height: 100vh; 
+            width: 100%;
+            z-index: 1;
+        }
+        
+        /* Header di atas peta */
+        .header-peta {
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header-peta fixed top-0 left-0 right-0 bg-blue-600 text-white p-4 shadow-lg">
+        <h1 class="text-center text-xl font-bold">🗺️ Peta Kota-Kota Besar Jawa Barat</h1>
+    </div>
+
+    <!-- Container Peta -->
+    <div id="map"></div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // 1. INISIALISASI PETA
+        // Set view ke tengah Jawa Barat dengan zoom level yang tepat
+        let map = L.map('map').setView([-6.9, 107.5], 8);
+        
+        // 2. TAMBAHKAN LAYER PETA
+        // Menggunakan OpenStreetMap sebagai layer dasar
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap Contributors'
+        }).addTo(map);
+        
+        // 3. DATA KOTA-KOTA BESAR JAWA BARAT
+        let kotaJawaBarat = [
+            {nama: 'Bandung', lat: -6.9175, lng: 107.6191, populasi: '2.5 juta'},
+            {nama: 'Bogor', lat: -6.5944, lng: 106.7892, populasi: '1.1 juta'},
+            {nama: 'Bekasi', lat: -6.2383, lng: 106.9756, populasi: '2.6 juta'},
+            {nama: 'Depok', lat: -6.4025, lng: 106.7942, populasi: '2.1 juta'},
+            {nama: 'Cimahi', lat: -6.8842, lng: 107.5408, populasi: '570 ribu'},
+            {nama: 'Sukabumi', lat: -6.9270, lng: 106.9316, populasi: '340 ribu'},
+            {nama: 'Tasikmalaya', lat: -7.3196, lng: 108.2029, populasi: '720 ribu'},
+            {nama: 'Cirebon', lat: -6.7149, lng: 108.5569, populasi: '340 ribu'},
+            {nama: 'Banjar', lat: -7.3738, lng: 108.5404, populasi: '180 ribu'},
+            {nama: 'Purwakarta', lat: -6.5405, lng: 107.4493, populasi: '260 ribu'}
+        ];
+        
+        // 4. TAMBAHKAN MARKER UNTUK SETIAP KOTA
+        kotaJawaBarat.forEach(function(kota) {
+            // Buat marker untuk setiap kota
+            let marker = L.marker([kota.lat, kota.lng])
+                .addTo(map)
+                // Tambahkan popup dengan informasi kota
+                .bindPopup(`
+                    <div style="min-width: 150px;">
+                        <h3 style="margin: 0 0 5px 0; font-weight: bold; color: #1e40af;">
+                            📍 ${kota.nama}
+                        </h3>
+                        <p style="margin: 3px 0; font-size: 12px;">
+                            <strong>Populasi:</strong> ${kota.populasi}
+                        </p>
+                        <p style="margin: 3px 0; font-size: 11px; color: #666;">
+                            Lat: ${kota.lat}<br>
+                            Lng: ${kota.lng}
+                        </p>
+                    </div>
+                `);
+            
+            // Tambahkan tooltip yang muncul saat hover
+            marker.bindTooltip(kota.nama, {
+                permanent: false,
+                direction: 'top',
+                offset: [0, -10]
+            });
+        });
+        
+        // 5. INFO DI KONSOL
+        console.log('Peta Jawa Barat berhasil dimuat!');
+        console.log(`Total ${kotaJawaBarat.length} kota ditampilkan`);
+        console.log('Klik marker untuk melihat detail kota');
+    </script>
+</body>
+</html>
